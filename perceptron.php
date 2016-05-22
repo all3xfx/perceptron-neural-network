@@ -59,7 +59,7 @@
         $weight = array();
         for($i = 0; $i < $banyaknyaInput; $i++)
         {
-            array_push($weight, rand(0.1, 1));
+            array_push($weight, rand(0, 999999) / 100000);
         }
 
         return $weight;
