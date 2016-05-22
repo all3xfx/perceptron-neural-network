@@ -20,7 +20,7 @@
             var matrik = [];
             var baris;
             var kolom;
-            
+
             $('#btnSetMatrik').click(function(){
                 baris = $('input[name="baris"]').val();
                 kolom = $('input[name="kolom"]').val();
@@ -44,7 +44,19 @@
                 $('.inputan').each(function(){
                     matrik.push($(this).val());
                 });
+
+                $.post('perceptron.php',
+                    {
+                        "matrik": matrik,
+                        "baris": baris,
+                        "kolom": kolom
+                    },
+                    function(dataPost){
+                        console.log(dataPost);
+                    }
+                );
             });
+
 
         </script>
     </body>
