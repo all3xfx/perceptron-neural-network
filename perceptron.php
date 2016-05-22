@@ -68,10 +68,38 @@
     }
 
     // bobotLama = bobot awal, alpha = learningRate.
-    // bobotLama dan target adalah array.
-    function perubahanBobot($bobotLama, $target, $alpha)
+    // bobotLama, input, dan target adalah array.
+    function perubahanBobot($bobotLama, $target, $alpha, $input)
     {
+        // Ganti ini untuk mengganti jumlah max perulangan.
+        $maxEpoch = 10;
+        $jumPerulangan = 0;
 
+        $bobot = $bobotLama;
+
+        // Proses pelatihan bobot sampai mengenali || maxEpoch.
+        while(!($bobot === $target))
+        {
+            // Jika sudah sampai batas perulangan, hentikan pelatihan.
+            if($jumPerulangan >= $maxEpoch)
+            {
+                return $bobot;
+            }
+
+            // Proses pelatihan.
+            for($i = 0; $i < count($bobot); $i++)
+            {
+                // Perubahan bobot.
+                $tmpDeltaW = $alpha * $target[$i] * $input[$i];
+                $bobot[$i] += $tmpDeltaW;
+
+                // Perubahan Bias.
+                // $tmpDeltaB = $alpha * $target[$i];
+                // $bias[$i] += $tmpDeltaB;
+            }
+
+
+        }
     }
 
 
@@ -85,14 +113,13 @@
     // Hitung Y (output).
     $output = aktivasi($net, $threshold);
 
-    // Rubah bobot untuk menyesuaikan dengan target.
-    $weight = perubahanBobot($weight, $target, $learningRate);
-
-
-
-    var_dump($net);
+    // var_dump($net);
     var_dump($weight);
-    var_dump($output);
+    // var_dump($output);
+
+    // Rubah bobot untuk menyesuaikan dengan target.
+    $weight = perubahanBobot($weight, $target, $learningRate, $matrik);
+
     echo "<br>bobot baru<br>";
     var_dump($weight);
 
