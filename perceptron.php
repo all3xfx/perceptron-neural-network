@@ -67,10 +67,10 @@
 
     // bobotLama = bobot awal, alpha = learningRate.
     // bobotLama, input, dan target adalah array.
-    function perubahanBobot($bobotLama, $target, $alpha, $input, $output)
+    function perubahanBobot($bobotLama, $target, $alpha, $input, $output, $bias)
     {
         // Ganti ini untuk mengganti jumlah max perulangan.
-        $maxEpoch = 10;
+        $maxEpoch = 100;
         $jumPerulangan = 0;
 
         $bobot = $bobotLama;
@@ -92,14 +92,14 @@
                 $bobot[$i] += $tmpDeltaW;
 
                 // Perubahan Bias.
-                // $tmpDeltaB = $alpha * $target[$i];
-                // $bias[$i] += $tmpDeltaB;
+                $tmpDeltaB = $alpha * $target[0];
+                $bias += $tmpDeltaB;
             }
 
             $jumPerulangan++;
         }
 
-        return $bobot;
+        return array($bobot, $bias);
     }
 
 
@@ -116,16 +116,18 @@
     $response = array();
     $response["inputan"] = $matrik;
     $response["bobot_lama"] = $weight;
-    $response["bias"] = $bias;
+    $response["bias_lama"] = $bias;
     $response["threshold"] = $threshold;
     $response["learningRate"] = $learningRate;
     $response["net"] = $net;
     $response["output"] = $output;
 
     // Rubah bobot untuk menyesuaikan dengan target.
-    $weight = perubahanBobot($weight, $target, $learningRate, $matrik, $output);
+    $tmpVal = perubahanBobot($weight, $target, $learningRate, $matrik, $output, $bias);
+    $weight = $tmpVal[0];
+    $bias = $tmpVal[1];
 
     $response["bobot_baru"] = $weight;
-
+    $response["bias_baru"] = $bias;
     echo json_encode($response);
 ?>
