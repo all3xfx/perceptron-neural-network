@@ -53,6 +53,7 @@
                     },
                     function(dataPost){
                         console.log(dataPost);
+                        var data = $.parseJSON(dataPost);
                     }
                 );
             });

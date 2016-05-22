@@ -4,8 +4,6 @@
     $kolom = $_POST['kolom'];
     $matrik = $_POST['matrik'];
 
-    var_dump($matrik);
-
     $weight = array();
     $learningRate = 1;
     $bias = 1;
@@ -15,7 +13,7 @@
     // Target. Ganti ini untuk mengenali pola tertenru.
     // Sekarang polanya adalah AND.
     // Sesuaikan pola dengan jumlah inputan (matrik).
-    $target = array(1, -1, -1, -1);
+    $target = array(1);
 
 
     // ===================== dKLARASI fUNGSI ==========================
@@ -69,7 +67,7 @@
 
     // bobotLama = bobot awal, alpha = learningRate.
     // bobotLama, input, dan target adalah array.
-    function perubahanBobot($bobotLama, $target, $alpha, $input)
+    function perubahanBobot($bobotLama, $target, $alpha, $input, $output)
     {
         // Ganti ini untuk mengganti jumlah max perulangan.
         $maxEpoch = 10;
@@ -78,7 +76,7 @@
         $bobot = $bobotLama;
 
         // Proses pelatihan bobot sampai mengenali || maxEpoch.
-        while(!($bobot === $target))
+        while(!($output === $target))
         {
             // Jika sudah sampai batas perulangan, hentikan pelatihan.
             if($jumPerulangan >= $maxEpoch)
@@ -90,7 +88,7 @@
             for($i = 0; $i < count($bobot); $i++)
             {
                 // Perubahan bobot.
-                $tmpDeltaW = $alpha * $target[$i] * $input[$i];
+                $tmpDeltaW = $alpha * $target[0] * $input[$i];
                 $bobot[$i] += $tmpDeltaW;
 
                 // Perubahan Bias.
@@ -98,8 +96,10 @@
                 // $bias[$i] += $tmpDeltaB;
             }
 
-
+            $jumPerulangan++;
         }
+
+        return $bobot;
     }
 
 
@@ -113,14 +113,19 @@
     // Hitung Y (output).
     $output = aktivasi($net, $threshold);
 
-    // var_dump($net);
-    var_dump($weight);
-    // var_dump($output);
+    $response = array();
+    $response["inputan"] = $matrik;
+    $response["bobot_lama"] = $weight;
+    $response["bias"] = $bias;
+    $response["threshold"] = $threshold;
+    $response["learningRate"] = $learningRate;
+    $response["net"] = $net;
+    $response["output"] = $output;
 
     // Rubah bobot untuk menyesuaikan dengan target.
-    $weight = perubahanBobot($weight, $target, $learningRate, $matrik);
+    $weight = perubahanBobot($weight, $target, $learningRate, $matrik, $output);
 
-    echo "<br>bobot baru<br>";
-    var_dump($weight);
+    $response["bobot_baru"] = $weight;
 
+    echo json_encode($response);
 ?>
