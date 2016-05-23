@@ -81,7 +81,7 @@
             // Jika sudah sampai batas perulangan, hentikan pelatihan.
             if($jumPerulangan >= $maxEpoch)
             {
-                return $bobot;
+                return array($bobot, $bias, $jumPerulangan);
             }
 
             // Proses pelatihan.
@@ -99,7 +99,7 @@
             $jumPerulangan++;
         }
 
-        return array($bobot, $bias);
+        return array($bobot, $bias, $jumPerulangan);
     }
 
 
@@ -121,12 +121,15 @@
     $response["learningRate"] = $learningRate;
     $response["net"] = $net;
     $response["output"] = $output;
+    $response["target"] = $target;
 
     // Rubah bobot untuk menyesuaikan dengan target.
     $tmpVal = perubahanBobot($weight, $target, $learningRate, $matrik, $output, $bias);
     $weight = $tmpVal[0];
     $bias = $tmpVal[1];
+    $epoch = $tmpVal[2];
 
+    $response["epoch"] = $epoch;
     $response["bobot_baru"] = $weight;
     $response["bias_baru"] = $bias;
     echo json_encode($response);
